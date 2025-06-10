@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SEO Analyzer</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>SEO Analyzer</h1>
+    <textarea id="inputText" rows="10" cols="60" placeholder="Paste your text..."></textarea><br>
+    <button onclick="analyze()">Analyze</button>
+    <div id="results"></div>
+
+    <script>
+        async function analyze() {
+            const text = document.getElementById("inputText").value;
+
+            const response = await fetch("/analyze", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text: text })
+            });
+
+            const data = await response.json();
+
+            document.getElementById("results").innerHTML = `
+                <p><strong>Score:</strong> ${data.score}</p>
+                <p><strong>Suggestions:</strong> ${data.suggestions}</p>
+                <p><strong>Keywords:</strong> ${data.keywords.join(", ")}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
